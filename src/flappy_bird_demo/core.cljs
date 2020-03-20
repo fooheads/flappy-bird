@@ -18,7 +18,6 @@
 (def starting-state { :timer-running false
                       :jump-count 0
 
-                      :initial-vel 0
                       :jump-vel 21
 
                       :horiz-vel -0.15
@@ -108,9 +107,9 @@
     :flappy-y
     (+ start-y (* 30 (.sin js/Math (/ (:time-delta st) 300))))))
 
-(defn update-flappy [{:keys [gravity time-delta initial-vel bottom-y flappy-y flappy-height jump-count] :as st}]
+(defn update-flappy [{:keys [gravity time-delta jump-vel bottom-y flappy-y flappy-height jump-count] :as st}]
   (if (pos? jump-count)
-    (let [cur-vel (- initial-vel (* time-delta gravity))
+    (let [cur-vel (- jump-vel (* time-delta gravity))
           new-y   (- flappy-y cur-vel)
           new-y   (if (> new-y (- bottom-y flappy-height))
                     (- bottom-y flappy-height)
@@ -135,12 +134,11 @@
       collision?
       score))
 
-(defn jump [{:keys [cur-time jump-count jump-vel] :as state}]
+(defn jump [{:keys [cur-time jump-count] :as state}]
   (-> state
       (assoc
           :jump-count (inc jump-count)
-          :flappy-start-time cur-time
-          :initial-vel jump-vel)))
+          :flappy-start-time cur-time)))
 
 ;; derivatives
 
