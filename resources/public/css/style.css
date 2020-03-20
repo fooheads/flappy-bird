@@ -30,8 +30,6 @@ body {
 .flappy {
     position: absolute;
     background: transparent url(../imgs/flappy-base.png) no-repeat top left;
-    top: 312px;
-    left: 212px;
     width: 57px;
     height: 41px;
 }
