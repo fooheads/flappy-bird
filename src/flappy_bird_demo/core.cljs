@@ -122,7 +122,7 @@
         :flappy-y new-y))
     (sine-wave st)))
 
-(defn score [{:keys [cur-time horiz-vel start-time pillar-spacing] :as st}]
+(defn update-score [{:keys [cur-time horiz-vel start-time pillar-spacing] :as st}]
   (let [score (- (.abs js/Math (floor (/ (- (* (- cur-time start-time) horiz-vel) 544)
                                        pillar-spacing)))
                  4)]
@@ -136,7 +136,7 @@
       update-flappy
       update-pillars
       detect-collision
-      score))
+      update-score))
 
 (defn jump [{:keys [cur-time jump-count] :as state}]
   (-> state
