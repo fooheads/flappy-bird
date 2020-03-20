@@ -73,11 +73,15 @@
   (>= flappy-y (- bottom-y flappy-height)))
 
 (defn collision? [{:keys [pillar-list] :as st}]
-  (if (some #(or (and (in-pillar? % (:flappy-width st) (:flappy-x st))
-                      (not (in-pillar-gap? st %)))
-                 (bottom-collision? st)) pillar-list)
+  (some #(or (and (in-pillar? % (:flappy-width st) (:flappy-x st))
+                  (not (in-pillar-gap? st %)))
+             (bottom-collision? st)) pillar-list))
+
+(defn detect-collision [st]
+  (if (collision? st)
     (assoc st :timer-running false)
     st))
+
 
 (defn new-pillar [cur-time bottom-y pos-x pillar-gap]
   {:start-time cur-time
@@ -131,7 +135,7 @@
           :time-delta (- timestamp (:flappy-start-time state)))
       update-flappy
       update-pillars
-      collision?
+      detect-collision
       score))
 
 (defn jump [{:keys [cur-time jump-count] :as state}]
