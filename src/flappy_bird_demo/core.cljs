@@ -128,11 +128,14 @@
                  4)]
    (assoc st :score (if (neg? score) 0 score))))
 
+(defn update-time [state timestamp]
+  (assoc state
+    :cur-time timestamp
+    :time-delta (- timestamp (:flappy-start-time state))))
+
 (defn time-update [timestamp state]
   (-> state
-      (assoc
-          :cur-time timestamp
-          :time-delta (- timestamp (:flappy-start-time state)))
+      (update-time timestamp)
       update-flappy
       update-pillars
       detect-collision
