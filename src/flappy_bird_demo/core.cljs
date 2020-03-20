@@ -133,7 +133,7 @@
     :cur-time timestamp
     :time-delta (- timestamp (:flappy-start-time state))))
 
-(defn time-update [timestamp state]
+(defn advance-game-state [timestamp state]
   (-> state
       (update-time timestamp)
       update-flappy
@@ -178,7 +178,7 @@
                                        :height lower-height}}]])
 
 (defn time-loop [time]
-  (let [new-state (swap! flap-state (partial time-update time))]
+  (let [new-state (swap! flap-state (partial advance-game-state time))]
     (when (:timer-running new-state)
       (go
        (<! (timeout 30))
