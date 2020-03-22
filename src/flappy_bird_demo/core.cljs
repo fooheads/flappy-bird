@@ -73,9 +73,11 @@
   (>= flappy-y (- bottom-y flappy-height)))
 
 (defn collision? [{:keys [pillar-list] :as st}]
-  (some #(or (and (in-pillar? % (:flappy-width st) (:flappy-x st))
-                  (not (in-pillar-gap? st %)))
-             (bottom-collision? st)) pillar-list))
+  (or
+    (bottom-collision? st)
+    (some #(and (in-pillar? % (:flappy-width st) (:flappy-x st))
+                 (not (in-pillar-gap? st %)))
+           pillar-list)))
 
 (defn detect-collision [st]
   (if (collision? st)
