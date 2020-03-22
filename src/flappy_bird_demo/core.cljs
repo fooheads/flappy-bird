@@ -106,21 +106,19 @@
                pillar-gap))
         pillars-in-world))))
 
-(defn sine-wave [{:keys [start-y] :as st}]
-  (assoc st
-    :flappy-y
-    (+ start-y (* 30 (.sin js/Math (/ (:time-delta st) 300))))))
+(defn sine-wave [v amplitude length time-delta]
+  (+ v (* amplitude (.sin js/Math (/ time-delta length)))))
 
-(defn update-flappy [{:keys [gravity time-delta jump-vel bottom-y flappy-y flappy-height jump-count] :as st}]
-  (if (pos? jump-count)
-    (let [cur-vel (- jump-vel (* time-delta gravity))
-          new-y   (- flappy-y cur-vel)
-          new-y   (if (> new-y (- bottom-y flappy-height))
-                    (- bottom-y flappy-height)
-                    new-y)]
-      (assoc st
-        :flappy-y new-y))
-    (sine-wave st)))
+(defn update-flappy [{:keys [gravity time-delta start-y jump-vel bottom-y flappy-y flappy-height jump-count] :as st}]
+  (assoc st :flappy-y
+    (if (pos? jump-count)
+      (let [cur-vel (- jump-vel (* time-delta gravity))
+            new-y   (- flappy-y cur-vel)
+            new-y   (if (> new-y (- bottom-y flappy-height))
+                      (- bottom-y flappy-height)
+                      new-y)]
+        new-y)
+      (sine-wave start-y 30 300 time-delta))))
 
 (defn update-score [{:keys [cur-time horiz-vel start-time pillar-spacing] :as st}]
   (let [score (- (.abs js/Math (floor (/ (- (* (- cur-time start-time) horiz-vel) 544)
