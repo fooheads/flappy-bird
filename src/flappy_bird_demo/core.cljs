@@ -72,12 +72,14 @@
 (defn bottom-collision? [{:keys [bottom-y flappy-y flappy-height]}]
   (>= flappy-y (- bottom-y flappy-height)))
 
+(defn pillar-collision? [st pillar]
+  (and (in-pillar? pillar (:flappy-width st) (:flappy-x st))
+       (not (in-pillar-gap? st pillar))))
+
 (defn collision? [{:keys [pillar-list] :as st}]
   (or
     (bottom-collision? st)
-    (some #(and (in-pillar? % (:flappy-width st) (:flappy-x st))
-                 (not (in-pillar-gap? st %)))
-           pillar-list)))
+    (some (partial pillar-collision? st) pillar-list)))
 
 (defn detect-collision [st]
   (if (collision? st)
